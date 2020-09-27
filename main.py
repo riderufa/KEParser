@@ -4,7 +4,7 @@ import csv
 
 import requests
 
-
+URL = 'https://kazanexpress.ru/api/category/1433?&'
 URL1 = 'https://kazanexpress.ru/api/main/more?categoryId=1433&size=20&page='
 URL2 = '&sortBy=&order=ascending'
 HEADERS = {
@@ -24,6 +24,17 @@ def get_html(data_url, params=None):
 def parse_shampoo():
     pages_count = 4
     products = []
+    html = get_html(URL)
+    if html.status_code == 200:
+        parsed_products = json.loads(html.text)
+        for item in parsed_products['payload']['products']:
+            product = {
+                'title': item['title'],
+                'price': item['sellPrice'],
+                'orders': item['ordersQuantity'],
+                'rating': item['rating']
+            }
+            products.append(product)
     for page in range(1, pages_count + 1):
         print(f'Парсинг страницы {page} из {pages_count}')
         time.sleep(1)
