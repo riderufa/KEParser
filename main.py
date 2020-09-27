@@ -1,5 +1,6 @@
 import json
 import time
+import csv
 
 import requests
 
@@ -39,6 +40,11 @@ def parse_shampoo():
                 products.append(product)
             with open('products.json', 'w') as outfile:
                 json.dump(products, outfile)
+            with open('products.csv', 'w', newline='') as file:
+                writer = csv.writer(file, delimiter=';')
+                writer.writerow(['Наименование', 'Стоимость', 'Количество заказов', 'Рейтинг'])
+                for item in products:
+                    writer.writerow([item['title'], item['price'], item['orders'], item['rating']])
         else:
             print('Error')
 
